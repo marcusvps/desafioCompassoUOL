@@ -9,18 +9,20 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Objects;
+
 
 class GlobalExceptionHandlerTest {
 
-    private GlobalExceptionHandler handler = Mockito.spy(new GlobalExceptionHandler());
+    private final GlobalExceptionHandler handler = Mockito.spy(new GlobalExceptionHandler());
 
     @Test
     void test_handler_notFoundException() {
         ResponseEntity<ErrorResponse> response =
                 handler.notFoundExceptionHandler(new NotFoundException("Informação nao encontrada!"));
 
-        Assertions.assertEquals("Informação nao encontrada!",response.getBody().getErrorMessage());
-        Assertions.assertTrue(response.getStatusCode().equals(HttpStatus.NOT_FOUND));
+        Assertions.assertEquals("Informação nao encontrada!", Objects.requireNonNull(response.getBody()).getErrorMessage());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -28,8 +30,8 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<ErrorResponse> response =
                 handler.dmlExceptionHandler(new InsertException("Erro ao incluir Informacao!"));
 
-        Assertions.assertEquals("Erro ao incluir Informacao!",response.getBody().getErrorMessage());
-        Assertions.assertTrue(response.getStatusCode().equals(HttpStatus.BAD_REQUEST));
+        Assertions.assertEquals("Erro ao incluir Informacao!", Objects.requireNonNull(response.getBody()).getErrorMessage());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -37,8 +39,8 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<ErrorResponse> response =
                 handler.dmlExceptionHandler(new UpdateException("Erro ao alterar Informacao!"));
 
-        Assertions.assertEquals("Erro ao alterar Informacao!",response.getBody().getErrorMessage());
-        Assertions.assertTrue(response.getStatusCode().equals(HttpStatus.BAD_REQUEST));
+        Assertions.assertEquals("Erro ao alterar Informacao!", Objects.requireNonNull(response.getBody()).getErrorMessage());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -46,7 +48,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<ErrorResponse> response =
                 handler.dmlExceptionHandler(new UpdateException("Erro ao deletar informacao!"));
 
-        Assertions.assertEquals("Erro ao deletar informacao!",response.getBody().getErrorMessage());
+        Assertions.assertEquals("Erro ao deletar informacao!", Objects.requireNonNull(response.getBody()).getErrorMessage());
         Assertions.assertEquals("400",response.getBody().getErrorCode());
 
     }

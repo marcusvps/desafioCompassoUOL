@@ -9,8 +9,8 @@ import java.io.Serializable;
  */
 public class ResponseDTO implements Serializable {
 
-    HttpStatus httpStatus;
-    String mensagem;
+    final HttpStatus httpStatus;
+    final String mensagem;
 
     public ResponseDTO(HttpStatus httpStatus, String mensagem) {
         this.httpStatus = httpStatus;

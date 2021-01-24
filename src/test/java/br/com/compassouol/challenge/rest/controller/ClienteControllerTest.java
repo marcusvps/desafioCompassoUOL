@@ -15,7 +15,6 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -181,7 +180,7 @@ class ClienteControllerTest {
 
         ResponseEntity<ClienteDTO> resposta = clienteController.addCliente(newCliente);
 
-        Assertions.assertEquals("Distrito Federal",resposta.getBody().getCidadeDTO().getEstado());
+        Assertions.assertEquals("Distrito Federal", Objects.requireNonNull(resposta.getBody()).getCidadeDTO().getEstado());
     }
 
     @Test

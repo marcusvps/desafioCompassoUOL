@@ -110,7 +110,7 @@ public class ClienteDAOImpl {
     /**
      * Responsavel por validar se a cidade do {@link ClienteDTO} é um cidade que existe na base de dados.
      * @param cliente -  {@link ClienteDTO} que estiver sendo inserido ou atualizado.
-     * @exception - {@link InsertException} - Quando a cidade informado for inexistente.
+     * @throws InsertException - Quando a cidade informado for inexistente.
      */
     private void validarCidade(ClienteDTO cliente) {
         CidadeDTO cidade;
@@ -153,8 +153,9 @@ public class ClienteDAOImpl {
 
     /**
      * Responsavel por apagar os dados de um cliente existente na base de dados.
-     * @param id
-     * @return
+     * @param id - Identificador unico do cliente.
+     * @return - Lista de Clientes restante na base de dados.
+     * @throws DeleteException quando o cliente não existir na base.
      */
     public List<ClienteDTO> deleteCliente(Long id) {
         if(mapClientes.containsKey(id)){

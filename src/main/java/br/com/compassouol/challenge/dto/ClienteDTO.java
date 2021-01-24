@@ -78,7 +78,6 @@ public class ClienteDTO {
          * Recupera o sexo baseado na sigla recebida.
          * @param sigla - sigla dos sexos(F,M,O).
          * @return EnumSexo corresponte a sigla.
-         * @throws Exception - Quando a sigla não corresponder a nenhum dos EnumSexo.
          */
         public static EnumSexo getBySigla(String sigla) throws NotFoundException {
 

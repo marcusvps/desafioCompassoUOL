@@ -27,9 +27,10 @@ public class CidadeController implements IController {
     private CidadeDAOImpl cidadeDAO;
 
     /**
-     *
-     * @param params
-     * @return
+     * Responsavel por receber a requisicao de buscar cidades por parametros(nome ou estado)
+     * @param params - {@link Map} com os parametros recebidos na requisição.
+     * @return ResponseEntity com HttpStatus e Body no formato JSON.
+     * @throws NotFoundException - Quando a cidade não for encontrada pelo nome ou estado.
      */
     @GetMapping(path = "/get")
     @ResponseBody
@@ -53,9 +54,9 @@ public class CidadeController implements IController {
     }
 
     /**
-     *
-     * @param newCidade
-     * @return
+     * Responsavel por receber a requisição de adicionar uma nova cidade
+     * @param newCidade - {@link CidadeDTO} que foi enviado na requisicao, com os dados da nova Cidade.
+     * @return - {@link CidadeDTO} que foi adicionada na base de dados.
      */
     @PostMapping(path = "/add",consumes = "application/json", produces = "application/json")
     @ResponseBody
@@ -63,6 +64,7 @@ public class CidadeController implements IController {
         CidadeDTO cidadeAdicionada = cidadeDAO.addCidade(newCidade);
         return new ResponseEntity<>(cidadeAdicionada, HttpStatus.OK);
     }
+
 
     public CidadeDAOImpl getCidadeDAO() {
         return cidadeDAO;

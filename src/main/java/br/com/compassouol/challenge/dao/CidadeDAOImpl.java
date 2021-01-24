@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class CidadeDAOImpl {
-    static Map<String, CidadeDTO> mapCidades = new HashMap<>();
+    final Map<String, CidadeDTO> mapCidades = new HashMap<>();
 
     /**
      * Ao construir o objeto CidadeDAOImpl, já é preenchido a mapCidades.
@@ -25,9 +25,9 @@ public class CidadeDAOImpl {
     }
 
     /**
-     *
-     * @param nome
-     * @return
+     * Responsavel por identificar uma {@link CidadeDTO} pelo nome;
+     * @param nome - Nome da cidade a ser pesquisada.
+     * @return - {@link CidadeDTO} com os dados da cidade ou null
      */
     public CidadeDTO getByName(String nome) {
         return mapCidades.get(nome.toUpperCase());
@@ -35,9 +35,11 @@ public class CidadeDAOImpl {
 
 
     /**
-     *
-     * @param estado
-     * @return
+     * Responsavel por identificar Cidades pelo estado;
+     * OBS: este metodo busca por todos os estados que possuam esta string no seu nome.
+     * EX: nome: Rio, retorna Rio de Janeiro e Rio Grande do Sul.
+     * @param estado - Nome do estado a ser pesquisado.
+     * @return - Uma lista com os estados que possuirem o parametro informado.
      */
     public List<CidadeDTO> getByEstado(String estado) {
         List<CidadeDTO> estados = mapCidades
@@ -50,9 +52,10 @@ public class CidadeDAOImpl {
     }
 
     /**
-     *
-     * @param newCidade
-     * @return
+     * Responsavel por adiconar uma cidade na base de dados
+     * @param newCidade - {@link CidadeDTO} com os dados da nova cidade
+     * @return - Retorna a cidade que foi inserida na base.
+     * @throws InsertException - Quando a cidade já existir na base.
      */
     public CidadeDTO addCidade(CidadeDTO newCidade) {
         if(mapCidades.containsKey(newCidade.getNome().toUpperCase())){

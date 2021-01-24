@@ -15,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author marcussantos
@@ -59,7 +60,7 @@ class CidadeControllerTest {
         HashMap<String, String> params = new HashMap<>();
         params.put("nome", "Taguatinga");
         ResponseEntity<List<CidadeDTO>> cidadeByFilter = cidadeController.getCidadeByFilter(params);
-        Assertions.assertEquals("Distrito Federal", cidadeByFilter.getBody().get(0).getEstado());
+        Assertions.assertEquals("Distrito Federal", Objects.requireNonNull(cidadeByFilter.getBody()).get(0).getEstado());
     }
 
     @Test
@@ -88,7 +89,7 @@ class CidadeControllerTest {
         HashMap<String, String> params = new HashMap<>();
         params.put("estado", "Distrito Federal");
         ResponseEntity<List<CidadeDTO>> cidadeByFilter = cidadeController.getCidadeByFilter(params);
-        Assertions.assertEquals("Taguatinga", cidadeByFilter.getBody().get(0).getNome());
+        Assertions.assertEquals("Taguatinga", Objects.requireNonNull(cidadeByFilter.getBody()).get(0).getNome());
     }
 
     @Test
@@ -102,7 +103,7 @@ class CidadeControllerTest {
     void test_sucesso_nome_cidade_que_foi_inserida_na_base() {
         CidadeDTO newCidade = new CidadeDTO("Aracaju", "Sergipe");
         ResponseEntity<CidadeDTO> cidadeAdicionada = cidadeController.addCidade(newCidade);
-        Assertions.assertEquals("Sergipe", newCidade.getEstado());
+        Assertions.assertEquals("Sergipe", Objects.requireNonNull(cidadeAdicionada.getBody()).getEstado());
     }
 
     @Test

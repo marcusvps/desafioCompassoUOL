@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * Responsavel por interceptar expcetions do tipo {@link NotFoundException}
+     * @param ex - Classe da exception que será capturada
+     * @return - ResponseEntity com HttpStatus e Body preenchidos.
+     */
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> notFoundExceptionHandler(NotFoundException ex) {
         ErrorResponse response = new ErrorResponse();
@@ -25,6 +30,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Responsavel por interceptar expcetions do tipo {@link InsertException},{@link DeleteException},{@link UpdateException}
+     * @param ex - Classe da exception que será capturada
+     * @return - ResponseEntity com HttpStatus e Body preenchidos.
+     */
     @ExceptionHandler({InsertException.class,UpdateException.class, DeleteException.class})
     public ResponseEntity<ErrorResponse> dmlExceptionHandler(RuntimeException ex) {
         ErrorResponse response = new ErrorResponse();

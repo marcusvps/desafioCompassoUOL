@@ -16,5 +16,5 @@ public interface IController{
         String name = "Serviço está";
         ResponseDTO response = new ResponseDTO(HttpStatus.OK,name + " online!" );
         return new ResponseEntity<>(response, response.getHttpStatus());
-    };
+    }
 }
