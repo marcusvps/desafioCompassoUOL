@@ -6,9 +6,9 @@ import br.com.compassouol.challenge.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +31,9 @@ public class CidadeController implements IController {
      * @param params
      * @return
      */
-    public ResponseEntity<List<CidadeDTO>> getCidadeByFilter(Map<String, String> params) {
+    @GetMapping(path = "/get")
+    @ResponseBody
+    public ResponseEntity<List<CidadeDTO>> getCidadeByFilter(@RequestParam Map<String, String> params) {
         List<CidadeDTO> cidades = null;
         String nome =  Optional.ofNullable(params.get("nome")).orElse(null);
         String estado = Optional.ofNullable(params.get("estado")).orElse(null);
@@ -55,7 +57,9 @@ public class CidadeController implements IController {
      * @param newCidade
      * @return
      */
-    public ResponseEntity<CidadeDTO> addCidade(CidadeDTO newCidade) {
+    @PostMapping(path = "/add",consumes = "application/json", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<CidadeDTO> addCidade(@Valid @RequestBody CidadeDTO newCidade) {
         CidadeDTO cidadeAdicionada = cidadeDAO.addCidade(newCidade);
         return new ResponseEntity<>(cidadeAdicionada, HttpStatus.OK);
     }

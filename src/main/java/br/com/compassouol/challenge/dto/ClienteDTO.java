@@ -27,8 +27,9 @@ public class ClienteDTO {
 
     private Integer idade;
 
-    @NotNull(message = "A cidade  do cliente deve ser informada.")
-    private CidadeDTO cidade;
+    private CidadeDTO cidadeDTO;
+
+    private String nomeCidade;
 
     public ClienteDTO(Long id, String nomeCompleto, EnumSexo sexo, LocalDate dataNascimento, CidadeDTO cidade) {
         this.id = id;
@@ -36,11 +37,22 @@ public class ClienteDTO {
         this.sexo = sexo;
         this.dataNascimento = dataNascimento;
         calcularIdade();
-        this.cidade = cidade;
+        this.cidadeDTO = cidade;
+    }
+
+    public ClienteDTO(Long id, String nomeCompleto, EnumSexo sexo, LocalDate dataNascimento, String nomeCidade) {
+        this.id = id;
+        this.nomeCompleto = nomeCompleto;
+        this.sexo = sexo;
+        this.dataNascimento = dataNascimento;
+        calcularIdade();
+        this.nomeCidade = nomeCidade;
     }
 
     public ClienteDTO() {
     }
+
+
 
     public enum EnumSexo {
         FEMININO(1,"Feminino",'F'),
@@ -86,6 +98,15 @@ public class ClienteDTO {
         }
     }
 
+    /**
+     *
+     */
+    public void calcularIdade() {
+        Integer anoNascimento = dataNascimento.getYear();
+        Integer anoAtual = LocalDate.now().getYear();
+        this.setIdade(anoAtual - anoNascimento);
+    }
+
     @Override
     public String toString() {
         return "ClienteDTO{" +
@@ -94,7 +115,7 @@ public class ClienteDTO {
                 ", sexo=" + sexo +
                 ", dataNascimento=" + dataNascimento +
                 ", idade=" + idade +
-                ", cidade='" + cidade + '\'' +
+                ", cidade='" + cidadeDTO + '\'' +
                 '}';
     }
 
@@ -149,21 +170,24 @@ public class ClienteDTO {
         return idade;
     }
 
-    public void calcularIdade() {
-        Integer anoNascimento = dataNascimento.getYear();
-        Integer anoAtual = LocalDate.now().getYear();
-        this.setIdade(anoAtual - anoNascimento);
-    }
+
 
     public void setIdade(Integer idade) {
         this.idade = idade;
     }
 
-    public CidadeDTO getCidade() {
-        return cidade;
+    public CidadeDTO getCidadeDTO() {
+        return cidadeDTO;
     }
 
-    public void setCidade(CidadeDTO cidade) {
-        this.cidade = cidade;
+    public void setCidadeDTO(CidadeDTO cidadeDTO) {
+        this.cidadeDTO = cidadeDTO;
+    }
+    public String getNomeCidade() {
+        return nomeCidade;
+    }
+
+    public void setNomeCidade(String nomeCidade) {
+        this.nomeCidade = nomeCidade;
     }
 }

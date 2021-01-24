@@ -5,13 +5,14 @@ import br.com.compassouol.challenge.dto.ClienteDTO;
 import br.com.compassouol.challenge.exception.UpdateException;
 import br.com.compassouol.challenge.exception.DeleteException;
 import br.com.compassouol.challenge.exception.InsertException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
 
 /**
  * Implementação para acessar as informações em memoria relacionadas com o Cliente.
@@ -20,13 +21,16 @@ import java.util.stream.Collectors;
 @Component
 public class ClienteDAOImpl {
 
-    static Map<Long, ClienteDTO> mapClientes = new HashMap<>();
+    private final Map<Long, ClienteDTO> mapClientes = new HashMap<>();
+
+    @Autowired
+    private CidadeDAOImpl cidadeDAO;
 
     /**
      * Ao construir o objeto ClienteDAOImpl, já é preenchido a mapClientes.
      */
     public ClienteDAOImpl() {
-        createMapClientes();
+        preencherMapClientes();
     }
 
     /**
@@ -61,15 +65,58 @@ public class ClienteDAOImpl {
      * @return - O {@link ClienteDTO} que foi incluso na base de dados ou lança {@link InsertException} quando o cliente já existir, baseado no id.
      */
     public ClienteDTO addCliente(ClienteDTO newCliente) {
+        validarClienteJaExistente(newCliente);
+        validarCidade(newCliente);
+
+        calcularIdadeSeNecessario(newCliente);
+        mapClientes.put(newCliente.getId(),newCliente);
+
+        return mapClientes.get(newCliente.getId());
+    }
+
+    /**
+     * Responsavel por validar se o cliente já existe na base de dados.
+     * @param newCliente - {@link ClienteDTO} com os dados completos do cliente a ser adicionado.
+     * @exception InsertException - Quando o cliente já existir na base, baseado em seu id.
+     */
+    private void validarClienteJaExistente(ClienteDTO newCliente) {
         if(mapClientes.containsKey(newCliente.getId())){
             throw new InsertException("O cliente de id " + newCliente.getId() + " já existe.");
         }
+    }
 
-        //Garantindo que a idade vai ser preenchida.
-        if(null == newCliente.getIdade()) newCliente.calcularIdade();
+    /**
+     * Responsavel por calcular a idade do Cliente quando a mesma não for informada.
+     * @param cliente - {@link ClienteDTO} que estiver sendo inserido ou atualizado.
+     */
+    private void calcularIdadeSeNecessario(ClienteDTO cliente) {
+        if (isNull(cliente.getIdade())) cliente.calcularIdade();
+    }
 
-        mapClientes.put(newCliente.getId(),newCliente);
-        return mapClientes.get(newCliente.getId());
+    /**
+     * Responsavel por validar se a cidade do {@link ClienteDTO} é um cidade que existe na base de dados.
+     * @param cliente -  {@link ClienteDTO} que estiver sendo inserido ou atualizado.
+     * @exception - {@link InsertException} - Quando a cidade informado for inexistente.
+     */
+    private void validarCidade(ClienteDTO cliente) {
+        CidadeDTO cidade;
+        if(isNull(cliente.getCidadeDTO())){
+            if(isNull(cliente.getNomeCidade())){
+                throw new InsertException("Não foi informado nenhuma cidade para o cliente: " + cliente.getNomeCompleto());
+            }
+            cidade = getCidadeDAO().getByName(cliente.getNomeCidade());
+        }else{
+            cidade = getCidadeDAO().getByName(cliente.getCidadeDTO().getNome());
+        }
+
+
+        if(isNull(cidade)){
+            throw new InsertException("A cidade " + cliente.getCidadeDTO().getNome() +
+                                     " informada para o(a) cliente " + cliente.getNomeCompleto() +
+                                     " não existe!");
+        }else{
+            cliente.setCidadeDTO(cidade);
+        }
     }
 
     /**
@@ -79,8 +126,11 @@ public class ClienteDAOImpl {
      */
     public ClienteDTO updateCliente(ClienteDTO updateCliente) {
         if(mapClientes.containsKey(updateCliente.getId())){
+            validarCidade(updateCliente);
+
+            calcularIdadeSeNecessario(updateCliente);
             mapClientes.replace(updateCliente.getId(), updateCliente);
-            if(null == updateCliente.getIdade()) updateCliente.calcularIdade();
+
             return mapClientes.get(updateCliente.getId());
         }else{
             throw new UpdateException("O Cliente de id: " + updateCliente.getId() + " não existe.");
@@ -95,7 +145,7 @@ public class ClienteDAOImpl {
     public List<ClienteDTO> deleteCliente(Long id) {
         if(mapClientes.containsKey(id)){
             mapClientes.remove(id);
-            return mapClientes.values().stream().collect(Collectors.toList());
+            return new ArrayList<>(mapClientes.values());
         }else{
             throw new DeleteException("O Cliente de id: " + id + " não existe.");
         }
@@ -104,7 +154,7 @@ public class ClienteDAOImpl {
     /**
      * Popula o mapClientes com as {@link ClienteDTO} e armazena em memoria.
      */
-    public void createMapClientes(){
+    public void preencherMapClientes(){
         ClienteDTO cliente1 =
                 new ClienteDTO(1L,
                         "José de Assis",
@@ -139,6 +189,15 @@ public class ClienteDAOImpl {
         mapClientes.put(cliente4.getId(),cliente4);
     }
 
+    /**
+     * Retira todos os objetos dentro do mapClientes.
+     */
+    public void limparMapClientes(){
+        mapClientes.clear();
+    }
 
 
+    public CidadeDAOImpl getCidadeDAO() {
+        return cidadeDAO;
+    }
 }

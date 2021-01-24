@@ -9,7 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Controller responsavel por receber, processar e retornar
@@ -24,10 +27,10 @@ public class ClienteController implements IController {
     private ClienteDAOImpl clienteDAO;
 
     /**
-     *
-     * @param params
-     * @return
-     * @throws NotFoundException
+     * Responsavel por receber a requisição de buscar cliente por parametros(id ou nome).
+     * @param params - {@link Map} com os parametros recebidos na requisição.
+     * @return ResponseEntity com HttpStatus e Body no formato JSON.
+     * @throws NotFoundException - Quando o cliente não for encontrado pelo id ou nome.
      */
     @GetMapping(path = "/get")
     @ResponseBody
@@ -52,11 +55,10 @@ public class ClienteController implements IController {
 
     }
 
-
     /**
-     *
-     * @param newCliente
-     * @return
+     * Responsavel por receber a requisição de adicionar um novo cliente.
+     * @param newCliente - {@link ClienteDTO} que foi enviado na requisicao, com os dados do novo cliente.
+     * @return - {@link ClienteDTO} que foi adicionado na base de dados.
      */
     @PostMapping(path = "/add",consumes = "application/json", produces = "application/json")
     @ResponseBody
@@ -67,22 +69,35 @@ public class ClienteController implements IController {
     }
 
     /**
-     *
-     * @param updateCliente
-     * @return
+     * Responsavel por receber a requisição de atualizar um cliente existente.
+     * @param updateCliente - {@link ClienteDTO} que foi enviado na requisicao, com os dados do cliente a ser atualizado.
+     * @return - {@link ClienteDTO} que foi atualizado na base de dados.
      */
-    public ResponseEntity<ClienteDTO> updateCliente(ClienteDTO updateCliente) {
+    @PutMapping(path = "/update",consumes = "application/json", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<ClienteDTO> updateCliente(@Valid @RequestBody ClienteDTO updateCliente) {
         ClienteDTO clienteAtualizado = clienteDAO.updateCliente(updateCliente);
         return new ResponseEntity<>(clienteAtualizado, HttpStatus.OK);
     }
 
 
+    /**
+     * Responsavel por receber a requisição de deletar um cliente existente.
+     * @param id - identificador unico do cliente.
+     * @return - Lista com os {@link ClienteDTO} restantes na base.
+     */
     @DeleteMapping(path = "/delete")
+    @ResponseBody
     public ResponseEntity<List<ClienteDTO>> deleteCliente(@RequestParam Long id) {
         List<ClienteDTO> clientesRestantes = clienteDAO.deleteCliente(id);
         if(null != clientesRestantes && !clientesRestantes.isEmpty()){
             return new ResponseEntity<>(clientesRestantes, HttpStatus.OK);
         }
         throw new NotFoundException("Nenhum cliente restante na base!");
+    }
+
+
+    public ClienteDAOImpl getClienteDAO() {
+        return clienteDAO;
     }
 }
