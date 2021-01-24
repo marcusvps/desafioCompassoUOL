@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  *
  */
 @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-public class AtualizarClienteException extends RuntimeException {
+public class InsertException extends RuntimeException {
 
-    public AtualizarClienteException(String message) {
+    public InsertException(String message) {
         super(message);
     }
 

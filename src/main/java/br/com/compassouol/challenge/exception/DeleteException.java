@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  *
  */
 @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-public class NovoClienteException extends RuntimeException {
+public class DeleteException extends RuntimeException {
 
-    public NovoClienteException(String message) {
+    public DeleteException(String message) {
         super(message);
     }
 

@@ -11,6 +11,7 @@ public class CidadeDTO {
 
     @NotNull(message = "Nome da cidade deve ser informado.")
     private String nome;
+
     @NotNull(message = "Estado da cidade deve ser informado.")
     private String estado;
 

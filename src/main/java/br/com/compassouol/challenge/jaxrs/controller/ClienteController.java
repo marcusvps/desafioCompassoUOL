@@ -2,21 +2,14 @@ package br.com.compassouol.challenge.jaxrs.controller;
 
 import br.com.compassouol.challenge.dao.ClienteDAOImpl;
 import br.com.compassouol.challenge.dto.ClienteDTO;
-import br.com.compassouol.challenge.dto.ResponseDTO;
 import br.com.compassouol.challenge.exception.NotFoundException;
-import br.com.compassouol.challenge.exception.NovoClienteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Controller responsavel por receber, processar e retornar
@@ -32,20 +25,20 @@ public class ClienteController implements IController {
 
     /**
      *
-     * @param parametro
+     * @param params
      * @return
      * @throws NotFoundException
      */
     @GetMapping(path = "/get")
     @ResponseBody
-    public ResponseEntity<List<ClienteDTO>> getClientByFilter(@RequestParam Map<String,String> parametro) throws NotFoundException {
+    public ResponseEntity<List<ClienteDTO>> getClientByFilter(@RequestParam Map<String,String> params) throws NotFoundException {
         List<ClienteDTO> clientes = null;
-        String id = Optional.ofNullable(parametro.get("id")).orElse(null);
-        String nome =  Optional.ofNullable(parametro.get("nome")).orElse(null);
+        String id = Optional.ofNullable(params.get("id")).orElse(null);
+        String nome =  Optional.ofNullable(params.get("nome")).orElse(null);
         if(null != id){
-            clientes = Arrays.asList(Optional
+            clientes = Collections.singletonList(Optional
                     .ofNullable(clienteDAO.getById(Long.valueOf(id)))
-                    .orElseThrow(() ->  new NotFoundException("Nenhum cliente encontrado para o id: " + id)));
+                    .orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado para o id: " + id)));
 
         }
 
@@ -69,10 +62,8 @@ public class ClienteController implements IController {
     @ResponseBody
     public ResponseEntity<ClienteDTO> addCliente(@Valid @RequestBody ClienteDTO newCliente) {
         ClienteDTO clienteAdicionado = clienteDAO.addCliente(newCliente);
-        if(null != clienteAdicionado){
-            return new ResponseEntity<>(clienteAdicionado, HttpStatus.OK);
-        }
-        throw new NovoClienteException("O novo cliente não foi adicionado!");
+        return new ResponseEntity<>(clienteAdicionado, HttpStatus.OK);
+
     }
 
     /**
@@ -82,10 +73,7 @@ public class ClienteController implements IController {
      */
     public ResponseEntity<ClienteDTO> updateCliente(ClienteDTO updateCliente) {
         ClienteDTO clienteAtualizado = clienteDAO.updateCliente(updateCliente);
-        if(null != clienteAtualizado){
-            return new ResponseEntity<>(clienteAtualizado, HttpStatus.OK);
-        }
-        throw new NovoClienteException("O Cliente não foi atualizado!");
+        return new ResponseEntity<>(clienteAtualizado, HttpStatus.OK);
     }
 
 

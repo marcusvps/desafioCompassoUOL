@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  *
  */
 @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-public class DeletarClienteException extends RuntimeException {
+public class UpdateException extends RuntimeException {
 
-    public DeletarClienteException(String message) {
+    public UpdateException(String message) {
         super(message);
     }
 

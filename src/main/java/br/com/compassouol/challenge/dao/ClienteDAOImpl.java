@@ -2,9 +2,9 @@ package br.com.compassouol.challenge.dao;
 
 import br.com.compassouol.challenge.dto.CidadeDTO;
 import br.com.compassouol.challenge.dto.ClienteDTO;
-import br.com.compassouol.challenge.exception.AtualizarClienteException;
-import br.com.compassouol.challenge.exception.DeletarClienteException;
-import br.com.compassouol.challenge.exception.NovoClienteException;
+import br.com.compassouol.challenge.exception.UpdateException;
+import br.com.compassouol.challenge.exception.DeleteException;
+import br.com.compassouol.challenge.exception.InsertException;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -22,6 +22,9 @@ public class ClienteDAOImpl {
 
     static Map<Long, ClienteDTO> mapClientes = new HashMap<>();
 
+    /**
+     * Ao construir o objeto ClienteDAOImpl, já é preenchido a mapClientes.
+     */
     public ClienteDAOImpl() {
         createMapClientes();
     }
@@ -43,22 +46,23 @@ public class ClienteDAOImpl {
      * @return - Uma lista com os clientes que possuirem o nome do parametro.
      */
     public List<ClienteDTO> getByName(String nome) {
-        return mapClientes
+        List<ClienteDTO> clientes = mapClientes
                 .values()
                 .stream()
                 .filter(cliente -> cliente.getNomeCompleto().toUpperCase().contains(nome.toUpperCase()))
                 .collect(Collectors.toList());
+        return clientes.isEmpty() ? null : clientes;
 
     }
 
     /**
      * Responsavel por adicionar um cliente na base de dados.
      * @param newCliente - {@link ClienteDTO} com todas as informações obrigatorias.
-     * @return - O {@link ClienteDTO} que foi incluso na base de dados ou lança {@link NovoClienteException} quando o cliente já existir, baseado no id.
+     * @return - O {@link ClienteDTO} que foi incluso na base de dados ou lança {@link InsertException} quando o cliente já existir, baseado no id.
      */
     public ClienteDTO addCliente(ClienteDTO newCliente) {
         if(mapClientes.containsKey(newCliente.getId())){
-            throw new NovoClienteException("O cliente de id " + newCliente.getId() + " já existe.");
+            throw new InsertException("O cliente de id " + newCliente.getId() + " já existe.");
         }
 
         //Garantindo que a idade vai ser preenchida.
@@ -71,7 +75,7 @@ public class ClienteDAOImpl {
     /**
      * Responsavel por atualizar os dados de um cliente existente na base de dados.
      * @param updateCliente - {@link ClienteDTO} com todas as informações obrigatorias.
-     * @return - O {@link ClienteDTO} que foi atualizado na base ou lança {@link AtualizarClienteException} quando o cliente não existir.
+     * @return - O {@link ClienteDTO} que foi atualizado na base ou lança {@link UpdateException} quando o cliente não existir.
      */
     public ClienteDTO updateCliente(ClienteDTO updateCliente) {
         if(mapClientes.containsKey(updateCliente.getId())){
@@ -79,7 +83,7 @@ public class ClienteDAOImpl {
             if(null == updateCliente.getIdade()) updateCliente.calcularIdade();
             return mapClientes.get(updateCliente.getId());
         }else{
-            throw new AtualizarClienteException("O Cliente de id: " + updateCliente.getId() + " não existe.");
+            throw new UpdateException("O Cliente de id: " + updateCliente.getId() + " não existe.");
         }
     }
 
@@ -93,17 +97,15 @@ public class ClienteDAOImpl {
             mapClientes.remove(id);
             return mapClientes.values().stream().collect(Collectors.toList());
         }else{
-            throw new DeletarClienteException("O Cliente de id: " + id + " não existe.");
+            throw new DeleteException("O Cliente de id: " + id + " não existe.");
         }
     }
 
     /**
-     *
-     * @return
+     * Popula o mapClientes com as {@link ClienteDTO} e armazena em memoria.
      */
     public void createMapClientes(){
         ClienteDTO cliente1 =
-
                 new ClienteDTO(1L,
                         "José de Assis",
                         ClienteDTO.EnumSexo.MASCULINO,
