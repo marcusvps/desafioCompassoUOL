@@ -1,4 +1,4 @@
-package br.com.compassouol.challenge.jaxrs.controller;
+package br.com.compassouol.challenge.rest.controller;
 
 import br.com.compassouol.challenge.dao.ClienteDAOImpl;
 import br.com.compassouol.challenge.dto.ClienteDTO;
@@ -36,8 +36,9 @@ public class ClienteController implements IController {
     @ResponseBody
     public ResponseEntity<List<ClienteDTO>> getClientByFilter(@RequestParam Map<String,String> params) throws NotFoundException {
         List<ClienteDTO> clientes = null;
-        String id = Optional.ofNullable(params.get("id")).orElse(null);
-        String nome =  Optional.ofNullable(params.get("nome")).orElse(null);
+        String id = params.get("id");
+        String nome =  params.get("nome");
+        String siglaSexo = params.get("siglaSexo");
         if(null != id){
             clientes = Collections.singletonList(Optional
                     .ofNullable(clienteDAO.getById(Long.valueOf(id)))
@@ -50,6 +51,12 @@ public class ClienteController implements IController {
                     .ofNullable(clienteDAO.getByName(nome))
                     .orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado para o nome: " + nome));
 
+        }
+
+        if(null != siglaSexo){
+            clientes = Optional
+                    .ofNullable(clienteDAO.getBySexo(siglaSexo))
+                    .orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado para o sexo: " + siglaSexo));
         }
         return new ResponseEntity<>(clientes, HttpStatus.OK);
 

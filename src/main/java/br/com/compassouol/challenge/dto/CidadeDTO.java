@@ -1,7 +1,6 @@
 package br.com.compassouol.challenge.dto;
 
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
 /**
  * Representa o objeto Cidade.
@@ -22,27 +21,6 @@ public class CidadeDTO {
     public CidadeDTO(String nome, String estado) {
         this.nome = nome;
         this.estado = estado;
-    }
-
-    @Override
-    public String toString() {
-        return "CidadeDTO{" +
-                "nome='" + nome + '\'' +
-                ", estado='" + estado + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CidadeDTO cidadeDTO = (CidadeDTO) o;
-        return Objects.equals(nome, cidadeDTO.nome) && Objects.equals(estado, cidadeDTO.estado);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(nome, estado);
     }
 
     public String getNome() {

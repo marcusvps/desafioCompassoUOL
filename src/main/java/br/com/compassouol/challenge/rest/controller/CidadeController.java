@@ -1,4 +1,4 @@
-package br.com.compassouol.challenge.jaxrs.controller;
+package br.com.compassouol.challenge.rest.controller;
 
 import br.com.compassouol.challenge.dao.CidadeDAOImpl;
 import br.com.compassouol.challenge.dto.CidadeDTO;
@@ -40,7 +40,7 @@ public class CidadeController implements IController {
         if(null != nome){
             cidades = Collections.singletonList(Optional
                     .ofNullable(cidadeDAO.getByName(nome))
-                    .orElseThrow(() -> new NotFoundException("Nenhuma cidade encontrado para o nome: " + nome)));
+                    .orElseThrow(() -> new NotFoundException("Nenhuma cidade encontrada para o nome: " + nome)));
         }
 
         if(null != estado){
@@ -62,5 +62,9 @@ public class CidadeController implements IController {
     public ResponseEntity<CidadeDTO> addCidade(@Valid @RequestBody CidadeDTO newCidade) {
         CidadeDTO cidadeAdicionada = cidadeDAO.addCidade(newCidade);
         return new ResponseEntity<>(cidadeAdicionada, HttpStatus.OK);
+    }
+
+    public CidadeDAOImpl getCidadeDAO() {
+        return cidadeDAO;
     }
 }

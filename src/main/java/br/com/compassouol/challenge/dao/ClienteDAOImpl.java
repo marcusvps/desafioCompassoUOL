@@ -43,7 +43,7 @@ public class ClienteDAOImpl {
     }
 
     /**
-     * Responsavel por identificar um {@link ClienteDTO} utilizando o nome.
+     * Responsavel por identificar uma lista de {@link ClienteDTO} utilizando o nome.
      * OBS: este metodo busca por todos os clientes que possuam esta string no seu nome completo.
      * EX: nome: Maria, retorna Maria do Carmo e Maria Aparecida
      * @param nome - Nome Do cliente
@@ -57,6 +57,20 @@ public class ClienteDAOImpl {
                 .collect(Collectors.toList());
         return clientes.isEmpty() ? null : clientes;
 
+    }
+
+    /**
+     *  Responsavel por identificar uma lista de {@link ClienteDTO} utilizando o sexo.
+     * @param siglaSexo - Sigla do Sexo do Cliente (F,M,O)
+     * @return - Uma lista com os clientes que possuirem o sexo do parametro.
+     */
+    public List<ClienteDTO> getBySexo(String siglaSexo) {
+        List<ClienteDTO> clientes = mapClientes
+                .values()
+                .stream()
+                .filter(cliente -> cliente.getSexo().equals(ClienteDTO.EnumSexo.getBySigla(siglaSexo)))
+                .collect(Collectors.toList());
+        return clientes.isEmpty() ? null : clientes;
     }
 
     /**
@@ -167,7 +181,7 @@ public class ClienteDAOImpl {
                         "Maria do Carmo",
                         ClienteDTO.EnumSexo.FEMININO,
                         LocalDate.of(1956,2,9),
-                        new CidadeDTO("Rio de Janeiro","Tocantins"));
+                        new CidadeDTO("Palmas","Tocantins"));
 
         ClienteDTO cliente3 =
                 new ClienteDTO(3L,
@@ -200,4 +214,6 @@ public class ClienteDAOImpl {
     public CidadeDAOImpl getCidadeDAO() {
         return cidadeDAO;
     }
+
+
 }

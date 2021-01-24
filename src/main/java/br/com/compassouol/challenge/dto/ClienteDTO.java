@@ -1,10 +1,10 @@
 package br.com.compassouol.challenge.dto;
 
-
+import br.com.compassouol.challenge.exception.NotFoundException;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.Objects;
+import java.util.Arrays;
 
 /**
  * Representa o objeto Cliente.
@@ -38,6 +38,7 @@ public class ClienteDTO {
         this.dataNascimento = dataNascimento;
         calcularIdade();
         this.cidadeDTO = cidade;
+        this.nomeCidade = cidade.getNome();
     }
 
     public ClienteDTO(Long id, String nomeCompleto, EnumSexo sexo, LocalDate dataNascimento, String nomeCidade) {
@@ -52,36 +53,26 @@ public class ClienteDTO {
     public ClienteDTO() {
     }
 
+    public EnumSexo getSexo() {
+        return sexo;
+    }
 
 
+    /**
+     * Enumerado representando os sexos disponiveis para Cliente
+     */
     public enum EnumSexo {
-        FEMININO(1,"Feminino",'F'),
-        MASCULINO(2,"Masculino",'M'),
-        OUTROS(3,"Outros",'O');
+        FEMININO("F"),
+        MASCULINO("M"),
+        OUTROS("O");
 
-        private Integer id;
-        private String descricao;
-        private char sigla;
+        private final String sigla;
 
-        EnumSexo(Integer id, String descricao, char sigla) {
-            this.id = id;
-            this.descricao = descricao;
+        EnumSexo(String sigla) {
             this.sigla = sigla;
         }
 
-        /**
-         * Recupera o sexo baseado no id recebido.
-         * @param id - identificador unico no EnumSexo.
-         * @return EnumSexo corresponte ao ID.
-         * @throws Exception - Quando o id não corresponder a nenhum dos EnumSexo.
-         */
-        public static EnumSexo getById(Integer id) throws Exception {
-            EnumSexo[] values = EnumSexo.values();
-            for (EnumSexo value : values) {
-                if(value.id.equals(id)) return value;
-            }
-            throw new Exception("Identificador inválido para o sexo do cliente.");
-        }
+
 
         /**
          * Recupera o sexo baseado na sigla recebida.
@@ -89,49 +80,25 @@ public class ClienteDTO {
          * @return EnumSexo corresponte a sigla.
          * @throws Exception - Quando a sigla não corresponder a nenhum dos EnumSexo.
          */
-        public static EnumSexo getBySigla(String sigla) throws Exception {
-            EnumSexo[] values = EnumSexo.values();
-            for (EnumSexo value : values) {
-                if(value.sigla == sigla.charAt(0)) return value;
-            }
-            throw new Exception("Sigla inválida para o sexo do cliente.");
+        public static EnumSexo getBySigla(String sigla) throws NotFoundException {
+
+            return Arrays.stream(EnumSexo.values())
+                    .filter(enumSexo -> enumSexo.sigla.equalsIgnoreCase(sigla))
+                    .findFirst()
+                    .orElseThrow(() -> new NotFoundException("Sigla inválida para o sexo do cliente."));
+
+
         }
     }
 
     /**
-     *
+     * Calcula a idade e define no campo idade do {@link ClienteDTO}
+     * Calculo é feito com Ano Atual - Ano de Nascimento do Cliente.
      */
     public void calcularIdade() {
-        Integer anoNascimento = dataNascimento.getYear();
+        Integer anoNascimento = getDataNascimento().getYear();
         Integer anoAtual = LocalDate.now().getYear();
         this.setIdade(anoAtual - anoNascimento);
-    }
-
-    @Override
-    public String toString() {
-        return "ClienteDTO{" +
-                "id=" + id +
-                ", nomeCompleto='" + nomeCompleto + '\'' +
-                ", sexo=" + sexo +
-                ", dataNascimento=" + dataNascimento +
-                ", idade=" + idade +
-                ", cidade='" + cidadeDTO + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ClienteDTO that = (ClienteDTO) o;
-        return Objects.equals(id, that.id)
-                && Objects.equals(nomeCompleto, that.nomeCompleto)
-                && Objects.equals(dataNascimento, that.dataNascimento);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, nomeCompleto, dataNascimento);
     }
 
     public Long getId() {
@@ -148,10 +115,6 @@ public class ClienteDTO {
 
     public void setNomeCompleto(String nomeCompleto) {
         this.nomeCompleto = nomeCompleto;
-    }
-
-    public EnumSexo getSexo() {
-        return sexo;
     }
 
     public void setSexo(EnumSexo sexo) {
@@ -187,7 +150,4 @@ public class ClienteDTO {
         return nomeCidade;
     }
 
-    public void setNomeCidade(String nomeCidade) {
-        this.nomeCidade = nomeCidade;
-    }
 }

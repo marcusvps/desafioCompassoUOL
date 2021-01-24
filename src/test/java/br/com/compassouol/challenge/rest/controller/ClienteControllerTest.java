@@ -1,9 +1,11 @@
-package br.com.compassouol.challenge.jaxrs.controller;
+package br.com.compassouol.challenge.rest.controller;
 
 import br.com.compassouol.challenge.dto.CidadeDTO;
 import br.com.compassouol.challenge.dto.ClienteDTO;
+import br.com.compassouol.challenge.exception.DeleteException;
 import br.com.compassouol.challenge.exception.InsertException;
 import br.com.compassouol.challenge.exception.NotFoundException;
+import br.com.compassouol.challenge.exception.UpdateException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -81,12 +84,12 @@ class ClienteControllerTest {
 
     @Test
     void test_inserir_novo_cliente_sem_informar_idade() {
-        ClienteDTO newCliente = new ClienteDTO();
-        newCliente.setNomeCompleto("Maria dos Reis");
-        newCliente.setSexo(ClienteDTO.EnumSexo.OUTROS);
-        newCliente.setId(99L);
-        newCliente.setDataNascimento(LocalDate.of(1990,3,2));
-        newCliente.setCidadeDTO(new CidadeDTO("Rio de Janeiro","Rio de Janeiro"));
+        ClienteDTO newCliente = new ClienteDTO(
+                99L,
+                "Maria dos Reis",
+                ClienteDTO.EnumSexo.OUTROS,
+                LocalDate.of(1990,3,2),
+                new CidadeDTO("Rio de Janeiro","Rio de Janeiro"));
 
         ResponseEntity<ClienteDTO> clienteAdiconado = clienteController.addCliente(newCliente);
         Assertions.assertEquals(Integer.valueOf(31), Objects.requireNonNull(clienteAdiconado.getBody()).getIdade());
@@ -113,12 +116,12 @@ class ClienteControllerTest {
 
     @Test
     void test_deve_atualizar_cliente_com_sucesso() {
-        ClienteDTO cliente = new ClienteDTO();
-        cliente.setId(1L);
-        cliente.setCidadeDTO(new CidadeDTO("Taguatinga","Dis"));
-        cliente.setSexo(ClienteDTO.EnumSexo.MASCULINO);
-        cliente.setDataNascimento(LocalDate.of(1900,4,9));
-        cliente.setNomeCompleto("NOME ATUALIZADO - UPDATE");
+        ClienteDTO cliente = new ClienteDTO(
+                1L,
+                "NOME ATUALIZADO - UPDATE",
+                ClienteDTO.EnumSexo.MASCULINO,
+                LocalDate.of(1900,4,9),
+                new CidadeDTO("Taguatinga","Dis"));
 
         ResponseEntity<ClienteDTO> clienteAtualizado = clienteController.updateCliente(cliente);
 
@@ -194,5 +197,41 @@ class ClienteControllerTest {
         } catch (InsertException e) {
              Assertions.assertEquals("Não foi informado nenhuma cidade para o cliente: Rosangela dos Santos",e.getMessage());
         }
+    }
+
+    @Test
+    void test_deve_lancar_erro_ao_tentar_atualizar_cliente_que_nao_existe() {
+        ClienteDTO cliente = new ClienteDTO();
+        cliente.setId(14545L);
+        cliente.setCidadeDTO(new CidadeDTO("Taguatinga","Dis"));
+        cliente.setSexo(ClienteDTO.EnumSexo.MASCULINO);
+        cliente.setDataNascimento(LocalDate.of(1900,4,9));
+        cliente.setNomeCompleto("NOME ATUALIZADO - UPDATE");
+
+        try {
+            clienteController.updateCliente(cliente);
+            Assertions.fail("Deveria ter sido lançado uma UpdateException, pois não existe cliente com id: 14545");
+        } catch (UpdateException e) {
+            Assertions.assertEquals("O Cliente de id: 14545 não existe.",e.getMessage());
+        }
+    }
+
+    @Test
+    void test_deve_lancar_erro_ao_tentar_deletar_cliente_que_nao_existe() {
+        Long id = 21231L;
+        try {
+            clienteController.deleteCliente(id);
+            Assertions.fail("Deveria ter sido lançado uma DeleteException, pois não existe cliente com o id: 21231 ");
+        } catch (DeleteException e) {
+            Assertions.assertEquals("O Cliente de id: 21231 não existe.",e.getMessage());
+        }
+    }
+
+    @Test
+    void test_deve_recuperar_clientes_pelo_sexo() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("siglaSexo","F");
+        ResponseEntity<List<ClienteDTO>> response = clienteController.getClientByFilter(params);
+        Assertions.assertNotNull(response.getBody());
     }
 }

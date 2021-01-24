@@ -17,22 +17,12 @@ public class ResponseDTO implements Serializable {
         this.mensagem = mensagem;
     }
 
-    public ResponseDTO() {
-    }
-
     public HttpStatus getHttpStatus() {
         return httpStatus;
-    }
-
-    public void setHttpStatus(HttpStatus httpStatus) {
-        this.httpStatus = httpStatus;
     }
 
     public String getMensagem() {
         return mensagem;
     }
 
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
 }

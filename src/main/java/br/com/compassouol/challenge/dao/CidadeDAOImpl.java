@@ -21,7 +21,7 @@ public class CidadeDAOImpl {
      * Ao construir o objeto CidadeDAOImpl, já é preenchido a mapCidades.
      */
     public CidadeDAOImpl() {
-        this.createMapCidades();
+        this.preencherMapCidades();
     }
 
     /**
@@ -55,19 +55,19 @@ public class CidadeDAOImpl {
      * @return
      */
     public CidadeDTO addCidade(CidadeDTO newCidade) {
-        if(mapCidades.containsKey(newCidade.getNome())){
+        if(mapCidades.containsKey(newCidade.getNome().toUpperCase())){
             throw new InsertException("A cidade " + newCidade.getNome() + " já existe.");
         }
 
-        mapCidades.put(newCidade.getNome(), newCidade);
-        return mapCidades.get(newCidade.getNome());
+        mapCidades.put(newCidade.getNome().toUpperCase(), newCidade);
+        return mapCidades.get(newCidade.getNome().toUpperCase());
     }
 
 
     /**
      * Popula o mapCidades com as {@link CidadeDTO} e armazena em memoria.
      */
-    private void createMapCidades() {
+    public void preencherMapCidades() {
         CidadeDTO cidade1 = new CidadeDTO();
         cidade1.setNome("Rio de Janeiro");
         cidade1.setEstado("Rio de Janeiro");
@@ -89,6 +89,13 @@ public class CidadeDAOImpl {
         mapCidades.put(cidade3.getNome().toUpperCase(),cidade3);
         mapCidades.put(cidade4.getNome().toUpperCase(),cidade4);
 
+    }
+
+    /**
+     * Retira todos os objetos dentro do mapCidades.
+     */
+    public void limparMapCidades(){
+        mapCidades.clear();
     }
 
 

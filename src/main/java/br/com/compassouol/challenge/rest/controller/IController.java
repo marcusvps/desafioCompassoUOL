@@ -1,4 +1,4 @@
-package br.com.compassouol.challenge.jaxrs.controller;
+package br.com.compassouol.challenge.rest.controller;
 
 import br.com.compassouol.challenge.dto.ResponseDTO;
 import org.springframework.http.HttpStatus;
