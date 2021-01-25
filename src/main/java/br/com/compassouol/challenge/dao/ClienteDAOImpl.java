@@ -157,7 +157,7 @@ public class ClienteDAOImpl {
      * @exception InsertException - Quando o cliente já existir na base, baseado em seu id.
      */
     private void validarClienteJaExistente(ClienteDTO newCliente) {
-        
+
 
         if(null != this.getByName(newCliente.getNomeCompleto())){
             throw new InsertException("O cliente com nome " + newCliente.getNomeCompleto() + " já existe.");
@@ -169,7 +169,9 @@ public class ClienteDAOImpl {
      * @param cliente - {@link ClienteDTO} que estiver sendo inserido ou atualizado.
      */
     private void calcularIdadeSeNecessario(ClienteDTO cliente) {
-        if (isNull(cliente.getIdade())) cliente.calcularIdade();
+        if (isNull(cliente.getIdade()) || cliente.getIdade().equals(Integer.valueOf(0))){
+            cliente.calcularIdade();
+        }
     }
 
     /**
