@@ -65,8 +65,4 @@ public class CidadeController implements IController {
         return new ResponseEntity<>(cidadeAdicionada, HttpStatus.OK);
     }
 
-
-    public CidadeDAOImpl getCidadeDAO() {
-        return cidadeDAO;
-    }
 }

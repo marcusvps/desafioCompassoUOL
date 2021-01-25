@@ -4,7 +4,6 @@ import br.com.compassouol.challenge.dto.CidadeDTO;
 import br.com.compassouol.challenge.exception.InsertException;
 import br.com.compassouol.challenge.exception.NotFoundException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,16 +22,13 @@ import java.util.Objects;
  */
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
+@Transactional
 class CidadeControllerTest {
 
     @SpyBean
     private CidadeController cidadeController;
 
-    @BeforeEach
-    void setUp() {
-        cidadeController.getCidadeDAO().limparMapCidades();
-        cidadeController.getCidadeDAO().preencherMapCidades();
-    }
+
 
     @Test
     void test_deve_lancar_erro_ao_nao_encontrar_cidade_pelo_nome() {
@@ -116,4 +113,6 @@ class CidadeControllerTest {
             Assertions.assertEquals("A cidade Taguatinga já existe.",e.getMessage());
         }
     }
+
+
 }

@@ -8,6 +8,8 @@ import javax.validation.constraints.NotNull;
  */
 public class CidadeDTO {
 
+    private Long id;
+
     @NotNull(message = "Nome da cidade deve ser informado.")
     private String nome;
 
@@ -39,5 +41,11 @@ public class CidadeDTO {
         this.estado = estado;
     }
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

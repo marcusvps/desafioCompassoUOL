@@ -7,7 +7,6 @@ import br.com.compassouol.challenge.exception.InsertException;
 import br.com.compassouol.challenge.exception.NotFoundException;
 import br.com.compassouol.challenge.exception.UpdateException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -26,18 +26,13 @@ import java.util.Objects;
  */
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
+@Transactional
 class ClienteControllerTest {
 
     @SpyBean
     private ClienteController clienteController;
 
-    @BeforeEach
-    void setUp() {
-        clienteController.getClienteDAO().limparMapClientes();
-        clienteController.getClienteDAO().preencherMapClientes();
-    }
-
-    @Test()
+        @Test()
     void test_deve_retornar_erro_ao_buscar_cliente_nao_cadastrado()  {
             HashMap<String, String> params = new HashMap<>();
             params.put("id","123123123");
@@ -55,8 +50,7 @@ class ClienteControllerTest {
     @Test
     void test_http_status_200_ao_buscar_cliente_existente() {
         HashMap<String, String> params = new HashMap<>();
-        params.put("id","2");
-
+        params.put("id","1");
         ResponseEntity<List<ClienteDTO>> clientByFilter = clienteController.getClientByFilter(params);
         Assertions.assertEquals(HttpStatus.OK.value(), clientByFilter.getStatusCodeValue());
     }
@@ -64,7 +58,7 @@ class ClienteControllerTest {
     @Test
     void test_http_status_200_ao_buscar_cliente_existente_pelo_nome() {
         HashMap<String, String> params = new HashMap<>();
-        params.put("nome","maria");
+        params.put("nome","Maria");
         ResponseEntity<List<ClienteDTO>> clientByFilter = clienteController.getClientByFilter(params);
         Assertions.assertEquals(HttpStatus.OK.value(), clientByFilter.getStatusCodeValue());
     }
