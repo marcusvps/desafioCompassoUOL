@@ -29,7 +29,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!--Dependencia que faz hotdeploy -->
+		<!--Dependencia que faz permite o hotdeploy -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -80,6 +80,16 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<!--Plugin para facilitar a geração da imagem docker do projeto-->
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.2</version>
+				<configuration>
+					<repository>compassouol/${project.artifactId}-app</repository>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
