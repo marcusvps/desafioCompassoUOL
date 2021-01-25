@@ -92,7 +92,7 @@ class ClienteControllerTest {
     @Test
     void test_deve_lancar_exception_ao_incluir_cliente_ja_existente() {
             ClienteDTO newCliente = new ClienteDTO(1L,
-                    "Antonieta dos Santos",
+                    "Jose de Assis",
                     ClienteDTO.EnumSexo.FEMININO,
                     LocalDate.of(1996,5,25),
                     new CidadeDTO("Taguatinga","Distrito Federal"));
@@ -101,7 +101,7 @@ class ClienteControllerTest {
             clienteController.addCliente(newCliente);
             Assertions.fail();
         } catch (InsertException e) {
-            Assertions.assertEquals("O cliente de id 1 já existe.",e.getMessage());
+            Assertions.assertEquals("O cliente com nome Jose de Assis já existe.",e.getMessage());
         }
 
     }

@@ -9,6 +9,7 @@ import br.com.compassouol.challenge.exception.InsertException;
 
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -156,8 +157,10 @@ public class ClienteDAOImpl {
      * @exception InsertException - Quando o cliente já existir na base, baseado em seu id.
      */
     private void validarClienteJaExistente(ClienteDTO newCliente) {
-        if(null != this.getById(newCliente.getId())){
-            throw new InsertException("O cliente de id " + newCliente.getId() + " já existe.");
+        
+
+        if(null != this.getByName(newCliente.getNomeCompleto())){
+            throw new InsertException("O cliente com nome " + newCliente.getNomeCompleto() + " já existe.");
         }
     }
 
