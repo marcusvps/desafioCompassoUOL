@@ -28,7 +28,7 @@ Tecnologias utilizadas:
 O projeto foi utiliza do H2Database, que é um banco de dados em memória que é criado junto com o build. Para  
 a criação do banco é utilzado o arquivo `data.sql` que está em `src/main/resources`.
 
-1 - Acesse `http:localhost:8080/h2-database`
+1 - Acesse `http://localhost:8080/h2-database`
 
 2 - Preencha as informações:
 * Driver Class = `org.h2.Driver`
