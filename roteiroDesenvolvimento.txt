@@ -1,9 +1,0 @@
- 22/01/2021
-Utilizei o Spring Initializr para criar a arquitetura inicial do meu projeto o https://start.spring.io/, já com as libs
-Jersey.
-Spring Web.
-H2 Database - Banco de dados em Memoria.
-
-Precisei atualizar o settings.xml do meu pc, pois eu estava apontando para o repositorio de um freela que eu estava atuando.
-
-Buildei o projeto, para que fosse baixados as libs necessarias para a compilação e execução, via maven. (mvn clean install) 

@@ -28,13 +28,16 @@ Tecnologias utilizadas:
 O projeto foi utiliza do H2Database, que é um banco de dados em memória que é criado junto com o build. Para  
 a criação do banco é utilzado o arquivo `data.sql` que está em `src/main/resources`.
 
-1 - Acesse `http:localhost:8080/h2-database`
+1 - Acesse `http://localhost:8080/h2-database`
 
 2 - Preencha as informações:
 * Driver Class = `org.h2.Driver`
 * JDBC URL: `jdbc:h2:mem:compassoUOLDS`
 * User Name: `admin`
 * Password: `admin`
+
+# Docker
+A atualização ou criação da imagem deve ser realizado com `mvn clean package dockerfile:build`
 
 # Swagger
 O  Swagger está versionado no arquivo `swagger.yaml`  e pode ser visualizado em https://editor.swagger.io/.
