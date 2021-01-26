@@ -1,10 +1,12 @@
 package br.com.compassouol.challenge.dto;
 
 import br.com.compassouol.challenge.exception.NotFoundException;
+import org.dozer.Mapping;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Representa o objeto Cliente.
@@ -13,7 +15,7 @@ import java.util.Arrays;
 public class ClienteDTO {
 
 
-    @NotNull(message = "id do cliente deve ser informado.")
+
     private Long id;
 
     @NotNull(message = "Nome do cliente deve ser informado.")
@@ -27,6 +29,7 @@ public class ClienteDTO {
 
     private Integer idade;
 
+    @Mapping("cidade")
     private CidadeDTO cidadeDTO;
 
     private String nomeCidade;
@@ -145,7 +148,11 @@ public class ClienteDTO {
     public void setCidadeDTO(CidadeDTO cidadeDTO) {
         this.cidadeDTO = cidadeDTO;
     }
+
     public String getNomeCidade() {
+        if(Objects.nonNull(getCidadeDTO())){
+            nomeCidade = getCidadeDTO().getNome();
+        }
         return nomeCidade;
     }
 

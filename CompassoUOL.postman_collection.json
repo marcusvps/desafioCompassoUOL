@@ -1,0 +1,314 @@
+{
+	"info": {
+		"_postman_id": "fb4092be-14e8-4e46-b9f2-0f4de4fca14d",
+		"name": "CompassoUOL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Cliente",
+			"item": [
+				{
+					"name": "pingClienteController",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/cliente/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cliente",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getClienteById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/cliente/get/?siglaSexo=M",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cliente",
+								"get",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "nome",
+									"value": "Ma",
+									"disabled": true
+								},
+								{
+									"key": "siglaSexo",
+									"value": "M"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getClienteByName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/cliente/get/?nome=Jos",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cliente",
+								"get",
+								""
+							],
+							"query": [
+								{
+									"key": "nome",
+									"value": "Jos"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getClienteBySexo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/cliente/get/?siglaSexo=M",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cliente",
+								"get",
+								""
+							],
+							"query": [
+								{
+									"key": "siglaSexo",
+									"value": "M"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addCliente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nomeCompleto\": \"José\",\r\n    \"sexo\": \"MASCULINO\",\r\n    \"dataNascimento\": \"2009-01-23\",\r\n    \"nomeCidade\": \"Taguatinga\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/cliente/add",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cliente",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCliente",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/cliente/delete?id=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cliente",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateCliente",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 5,\r\n    \"nomeCompleto\": \"Marcus Vinicius\",\r\n    \"sexo\": \"MASCULINO\",\r\n    \"dataNascimento\": \"2021-01-23\",\r\n    \"idade\": 19,\r\n    \"nomeCidade\": \"Taguatinga\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/cliente/update",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cliente",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cidade",
+			"item": [
+				{
+					"name": "pingCidadeController",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/cidade",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cidade"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCidadeByName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/cidade/get/?nome=Taguatinga",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cidade",
+								"get",
+								""
+							],
+							"query": [
+								{
+									"key": "nome",
+									"value": "Taguatinga"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCidadeByEstado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/cidade/get/?estado=Fed",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cidade",
+								"get",
+								""
+							],
+							"query": [
+								{
+									"key": "estado",
+									"value": "Fed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addCidade",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Riacho Fundo\",\r\n    \"estado\": \"Distrito Federal\"\r\n \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/cidade/add",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cidade",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

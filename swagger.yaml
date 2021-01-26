@@ -1,0 +1,213 @@
+swagger: "2.0"
+info:
+  description: "Esta é uma simples API em atendimento ao desafio do CompassoUOL para a vaga de Desenvolvedor Java "
+  version: "1.0.0"
+  title: "Swagger CompassoUOL"
+  
+host: "localhost:8080"
+tags:
+- name: "Cidade"
+  description: "Operações relacionadas a Cidade"
+- name: "Cliente"
+  description: "Operações relacionadas ao Cliente"
+  
+schemes:
+- "http"
+paths:
+  /cidade/add:
+    post:
+      tags:
+      - "Cidade"
+      summary: "Cria uma nova cidade"
+      description: ""
+      operationId: "add"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Objeto Cidade com as informações necessarias para inclusão"
+        required: true
+        schema:
+          $ref: "#/definitions/Cidade"
+      responses:
+        "200":
+          description: "Ok"
+        "400":
+          description: "A cidade (nomeCidade) já existe"
+   
+   
+  /cidade/get:
+    get:
+      tags:
+      - "Cidade"
+      summary: "Busca as cidades por filtro"
+      description: "O filtro permite nome ou estado"
+      operationId: "getCidade"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "nome"
+        in: "query"
+        description: "Nome da Cidade"
+        type: "string"
+      - name: "estado"
+        in: "query"
+        description: "Estado da Cidade"
+        type: "string"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Cidade"
+        "404":
+          description: "Nenhuma cidade encontrada para (nome ou estado)"
+
+  /cliente/get:
+      get:
+        tags:
+        - "Cliente"
+        summary: "Busca os clientes por filtro"
+        description: "O filtro permite id ou nome ou sigla do sexo"
+        operationId: "getCliente"
+        produces:
+        - "application/json"
+        parameters:
+        - name: "nome"
+          in: "query"
+          description: "Nome do Cliente"
+          type: "string"
+        - name: "id"
+          in: "query"
+          description: "Identificador Unico do Cliente"
+          type: "number"
+        - name: "siglaSexo"
+          in: "query"
+          description: "Sigla do Sexo do Cliente(M,F,O)"
+          type: "string"
+        responses:
+          "200":
+            description: "Ok"
+            schema:
+              type: "array"
+              items:
+                $ref: "#/definitions/Cliente"
+          "404":
+            description: "Nenhum cliente encontrado para (nome ou estado ou sexo)"
+            
+  /cliente/add:
+    post:
+      tags:
+      - "Cliente"
+      summary: "Cria um novo Cliente"
+      description: ""
+      operationId: "addCliente"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Objeto Cliente com as informações necessarias para inclusão"
+        required: true
+        schema:
+          $ref: "#/definitions/Cliente"
+      responses:
+        "200":
+          description: "Ok"
+        "400":
+          description: "O cliente de nome (nome) já existe."
+          
+  /cliente/update:
+    put:
+      tags:
+      - "Cliente"
+      summary: "Atualiza um cliente existente"
+      description: ""
+      operationId: "updateCliente"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Objeto Cliente com as informações necessarias para alteração"
+        required: true
+        schema:
+          $ref: "#/definitions/Cliente"
+      responses:
+        "200":
+          description: "Ok"
+        "404":
+          description: "O cliente de id (id) não existe."
+          
+  /cliente/delete:
+    delete:
+      tags:
+      - "Cliente"
+      summary: "Deleta um cliente existente."
+      description: ""
+      operationId: "deleteCliente"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: "Id do cliente a ser excluido"
+        required: true
+        type: "number"
+      responses:
+        "200":
+          description: "Ok"
+        "404":
+          description: "O cliente de id (id) não existe."
+  
+definitions:
+  
+  Cidade:
+    type: "object"
+    required:
+    - "nome"
+    - "estado"
+    properties:
+      nome:
+        type: "string"
+        example: "Palmas"
+      estado:
+        type: "string"
+        example: "Tocantins"
+  Cliente:
+    type: "object"
+    required:
+    - "nomeCompleto"
+    - "sexo"
+    - "dataNascimento"
+    properties:
+      id:
+        type: "number"
+        example: "1"
+      nomeCompleto:
+        type: "string"
+        example: "João dos Santos"
+      sexo:
+        type: "string"
+        example: "F,M,O"
+      dataNascimento:
+        type: "string"
+        example: "2009-01-23"
+      cidade:
+        $ref: "#/definitions/Cidade"
+      nomeCidade:
+        type: "string"
+        example: "Palmas"
+      
+      
+      

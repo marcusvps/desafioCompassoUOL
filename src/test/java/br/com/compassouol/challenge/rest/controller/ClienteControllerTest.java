@@ -7,7 +7,6 @@ import br.com.compassouol.challenge.exception.InsertException;
 import br.com.compassouol.challenge.exception.NotFoundException;
 import br.com.compassouol.challenge.exception.UpdateException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -26,18 +26,13 @@ import java.util.Objects;
  */
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
+@Transactional
 class ClienteControllerTest {
 
     @SpyBean
     private ClienteController clienteController;
 
-    @BeforeEach
-    void setUp() {
-        clienteController.getClienteDAO().limparMapClientes();
-        clienteController.getClienteDAO().preencherMapClientes();
-    }
-
-    @Test()
+        @Test()
     void test_deve_retornar_erro_ao_buscar_cliente_nao_cadastrado()  {
             HashMap<String, String> params = new HashMap<>();
             params.put("id","123123123");
@@ -55,8 +50,7 @@ class ClienteControllerTest {
     @Test
     void test_http_status_200_ao_buscar_cliente_existente() {
         HashMap<String, String> params = new HashMap<>();
-        params.put("id","2");
-
+        params.put("id","1");
         ResponseEntity<List<ClienteDTO>> clientByFilter = clienteController.getClientByFilter(params);
         Assertions.assertEquals(HttpStatus.OK.value(), clientByFilter.getStatusCodeValue());
     }
@@ -64,7 +58,7 @@ class ClienteControllerTest {
     @Test
     void test_http_status_200_ao_buscar_cliente_existente_pelo_nome() {
         HashMap<String, String> params = new HashMap<>();
-        params.put("nome","maria");
+        params.put("nome","Maria");
         ResponseEntity<List<ClienteDTO>> clientByFilter = clienteController.getClientByFilter(params);
         Assertions.assertEquals(HttpStatus.OK.value(), clientByFilter.getStatusCodeValue());
     }
@@ -90,6 +84,7 @@ class ClienteControllerTest {
                 LocalDate.of(1990,3,2),
                 new CidadeDTO("Rio de Janeiro","Rio de Janeiro"));
 
+        newCliente.setIdade(null);
         ResponseEntity<ClienteDTO> clienteAdiconado = clienteController.addCliente(newCliente);
         Assertions.assertEquals(Integer.valueOf(31), Objects.requireNonNull(clienteAdiconado.getBody()).getIdade());
 
@@ -98,7 +93,7 @@ class ClienteControllerTest {
     @Test
     void test_deve_lancar_exception_ao_incluir_cliente_ja_existente() {
             ClienteDTO newCliente = new ClienteDTO(1L,
-                    "Antonieta dos Santos",
+                    "Jose de Assis",
                     ClienteDTO.EnumSexo.FEMININO,
                     LocalDate.of(1996,5,25),
                     new CidadeDTO("Taguatinga","Distrito Federal"));
@@ -107,7 +102,7 @@ class ClienteControllerTest {
             clienteController.addCliente(newCliente);
             Assertions.fail();
         } catch (InsertException e) {
-            Assertions.assertEquals("O cliente de id 1 já existe.",e.getMessage());
+            Assertions.assertEquals("O cliente com nome Jose de Assis já existe.",e.getMessage());
         }
 
     }
@@ -179,7 +174,7 @@ class ClienteControllerTest {
                 "Taguatinga");
 
         ResponseEntity<ClienteDTO> resposta = clienteController.addCliente(newCliente);
-
+        Assertions.assertEquals("Taguatinga", Objects.requireNonNull(resposta.getBody()).getNomeCidade());
         Assertions.assertEquals("Distrito Federal", Objects.requireNonNull(resposta.getBody()).getCidadeDTO().getEstado());
     }
 
@@ -232,5 +227,12 @@ class ClienteControllerTest {
         params.put("siglaSexo","F");
         ResponseEntity<List<ClienteDTO>> response = clienteController.getClientByFilter(params);
         Assertions.assertNotNull(response.getBody());
+    }
+
+    @Test
+    void test_http_bad_request_ao_buscar_clientes_sem_nenhum_parametro() {
+        HashMap<String, String> params = new HashMap<>();
+        ResponseEntity<List<ClienteDTO>> response = clienteController.getClientByFilter(params);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST,response.getStatusCode());
     }
 }

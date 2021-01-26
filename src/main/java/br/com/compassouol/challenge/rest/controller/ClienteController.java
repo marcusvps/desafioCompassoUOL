@@ -1,6 +1,6 @@
 package br.com.compassouol.challenge.rest.controller;
 
-import br.com.compassouol.challenge.dao.ClienteDAOImpl;
+import br.com.compassouol.challenge.dao.impl.ClienteDAOImpl;
 import br.com.compassouol.challenge.dto.ClienteDTO;
 import br.com.compassouol.challenge.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Controller responsavel por receber, processar e retornar
@@ -35,31 +32,57 @@ public class ClienteController implements IController {
     @GetMapping(path = "/get")
     @ResponseBody
     public ResponseEntity<List<ClienteDTO>> getClientByFilter(@RequestParam Map<String,String> params) throws NotFoundException {
-        List<ClienteDTO> clientes = null;
+        List<ClienteDTO> clientes;
         String id = params.get("id");
         String nome =  params.get("nome");
         String siglaSexo = params.get("siglaSexo");
-        if(null != id){
-            clientes = Collections.singletonList(Optional
-                    .ofNullable(clienteDAO.getById(Long.valueOf(id)))
-                    .orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado para o id: " + id)));
 
+        if(Objects.nonNull(id)){
+            clientes = recuperarClientePorId(id);
+        }else if(Objects.nonNull(nome)){
+            clientes = recuperarClientesPorNome(nome);
+        }else if(Objects.nonNull(siglaSexo)){
+            clientes = recuperarClientesPorSexo(siglaSexo);
+        }else{
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
-        if(null != nome){
-            clientes = Optional
-                    .ofNullable(clienteDAO.getByName(nome))
-                    .orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado para o nome: " + nome));
-
-        }
-
-        if(null != siglaSexo){
-            clientes = Optional
-                    .ofNullable(clienteDAO.getBySexo(siglaSexo))
-                    .orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado para o sexo: " + siglaSexo));
-        }
         return new ResponseEntity<>(clientes, HttpStatus.OK);
 
+    }
+
+
+    /**
+     * Busca na base Clientes pelo seu sexo.
+     * @param siglaSexo - M,F,O siglas válidas.
+     * @return - Lista com os {@link ClienteDTO} encontrados.
+     */
+    private List<ClienteDTO> recuperarClientesPorSexo(String siglaSexo) {
+        return Optional
+                .ofNullable(clienteDAO.getBySexo(siglaSexo))
+                .orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado para o sexo: " + siglaSexo));
+    }
+
+    /**
+     * Busca na base Clientes pelo seu nome.
+     * @param nome - Nome do cliente.
+     * @return - Lista com os {@link ClienteDTO} encontrados.
+     */
+    private List<ClienteDTO> recuperarClientesPorNome(String nome) {
+        return Optional
+                .ofNullable(clienteDAO.getByName(nome))
+                .orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado para o nome: " + nome));
+    }
+
+    /**
+     * Busca na base Clientes pelo seu id.
+     * @param id - Identificador Unico do Cliente
+     * @return - {@link ClienteDTO} encontrado.
+     */
+    private List<ClienteDTO> recuperarClientePorId(String id) {
+        return Collections.singletonList(Optional
+                .ofNullable(clienteDAO.getById(Long.valueOf(id)))
+                .orElseThrow(() -> new NotFoundException("Nenhum cliente encontrado para o id: " + id)));
     }
 
     /**
@@ -103,8 +126,4 @@ public class ClienteController implements IController {
         throw new NotFoundException("Nenhum cliente restante na base!");
     }
 
-
-    public ClienteDAOImpl getClienteDAO() {
-        return clienteDAO;
-    }
 }

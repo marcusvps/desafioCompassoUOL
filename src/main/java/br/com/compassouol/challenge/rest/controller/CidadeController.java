@@ -1,6 +1,6 @@
 package br.com.compassouol.challenge.rest.controller;
 
-import br.com.compassouol.challenge.dao.CidadeDAOImpl;
+import br.com.compassouol.challenge.dao.impl.CidadeDAOImpl;
 import br.com.compassouol.challenge.dto.CidadeDTO;
 import br.com.compassouol.challenge.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Controller responsavel por receber, processar e retornar
@@ -35,22 +32,40 @@ public class CidadeController implements IController {
     @GetMapping(path = "/get")
     @ResponseBody
     public ResponseEntity<List<CidadeDTO>> getCidadeByFilter(@RequestParam Map<String, String> params) {
-        List<CidadeDTO> cidades = null;
+        List<CidadeDTO> cidades;
         String nome =  Optional.ofNullable(params.get("nome")).orElse(null);
         String estado = Optional.ofNullable(params.get("estado")).orElse(null);
-        if(null != nome){
-            cidades = Collections.singletonList(Optional
-                    .ofNullable(cidadeDAO.getByName(nome))
-                    .orElseThrow(() -> new NotFoundException("Nenhuma cidade encontrada para o nome: " + nome)));
-        }
-
-        if(null != estado){
-            cidades = Optional
-                    .ofNullable(cidadeDAO.getByEstado(estado))
-                    .orElseThrow(() -> new NotFoundException("Nenhuma cidade encontrada para o estado: " + estado));
+        if(Objects.nonNull(nome)){
+            cidades = recuperarCidadesPeloNome(nome);
+        }else if(Objects.nonNull(estado)){
+            cidades = recuperarCidadesPeloEstado(estado);
+        }else{
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(cidades, HttpStatus.OK);
+    }
+
+    /**
+     * Busca na base cidades pelo estado
+     * @param estado - Estado da cidade
+     * @return - Lista com as {@link CidadeDTO} que pertençam ao estado.
+     */
+    private List<CidadeDTO> recuperarCidadesPeloEstado(String estado) {
+        return Optional
+                .ofNullable(cidadeDAO.getByEstado(estado))
+                .orElseThrow(() -> new NotFoundException("Nenhuma cidade encontrada para o estado: " + estado));
+    }
+
+    /**
+     * Busca na base a cidade pelo seu nome
+     * @param nome - Nome da cidade
+     * @return - {@link CidadeDTO} encontrada na base.
+     */
+    private List<CidadeDTO> recuperarCidadesPeloNome(String nome) {
+        return Collections.singletonList(Optional
+                .ofNullable(cidadeDAO.getByName(nome))
+                .orElseThrow(() -> new NotFoundException("Nenhuma cidade encontrada para o nome: " + nome)));
     }
 
     /**
@@ -65,8 +80,4 @@ public class CidadeController implements IController {
         return new ResponseEntity<>(cidadeAdicionada, HttpStatus.OK);
     }
 
-
-    public CidadeDAOImpl getCidadeDAO() {
-        return cidadeDAO;
-    }
 }
