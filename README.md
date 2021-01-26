@@ -25,7 +25,7 @@ Tecnologias utilizadas:
 
 
 # Acesso a console do H2Database
-O projeto foi utiliza do H2Database, que é um banco de dados em memória que é criado junto com o build. Para  
+O projeto utiliza do H2Database, que é um banco de dados em memória criado junto com o build. Para  
 a criação do banco é utilzado o arquivo `data.sql` que está em `src/main/resources`.
 
 1 - Acesse `http://localhost:8080/h2-database`
