@@ -148,11 +148,11 @@ public class ClienteDTO {
     public void setCidadeDTO(CidadeDTO cidadeDTO) {
         this.cidadeDTO = cidadeDTO;
     }
+
     public String getNomeCidade() {
         if(Objects.nonNull(getCidadeDTO())){
             nomeCidade = getCidadeDTO().getNome();
         }
-
         return nomeCidade;
     }
 

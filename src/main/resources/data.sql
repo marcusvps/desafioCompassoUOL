@@ -21,7 +21,7 @@ CREATE TABLE CLIENTE(
 
 INSERT INTO CIDADE (nome,estado) VALUES ('Taguatinga', 'Distrito Federal');
 INSERT INTO CIDADE (nome,estado) VALUES ('Rio de Janeiro', 'Rio de Janeiro');
-INSERT INTO CIDADE (nome,estado) VALUES ('São Paulo', 'São Paulo');
+INSERT INTO CIDADE (nome,estado) VALUES ('Macapa', 'Amapa');
 INSERT INTO CIDADE (nome,estado) VALUES ('Palmas', 'Tocantins');
 
 INSERT INTO CLIENTE(nomeCompleto,sexo,dataNascimento,idade,idCidade) VALUES ('Jose de Assis','MASCULINO', '1995-9-21',25,1);

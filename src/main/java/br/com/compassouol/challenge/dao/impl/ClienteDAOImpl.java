@@ -1,5 +1,6 @@
-package br.com.compassouol.challenge.dao;
+package br.com.compassouol.challenge.dao.impl;
 
+import br.com.compassouol.challenge.dao.repository.ClienteRepository;
 import br.com.compassouol.challenge.dao.entity.Cliente;
 import br.com.compassouol.challenge.dto.CidadeDTO;
 import br.com.compassouol.challenge.dto.ClienteDTO;
@@ -9,13 +10,10 @@ import br.com.compassouol.challenge.exception.InsertException;
 
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
@@ -32,7 +30,7 @@ public class ClienteDAOImpl {
     @Autowired
     private CidadeDAOImpl cidadeDAO;
 
-    DozerBeanMapper mapper;
+    final DozerBeanMapper mapper;
 
     /**
      * Ao construir o objeto ClienteDAOImpl, já é preenchido a mapClientes.
@@ -49,8 +47,7 @@ public class ClienteDAOImpl {
      */
     public ClienteDTO getById(Long id){
         Optional<Cliente> entidade = clienteRepository.findById(id);
-        if(entidade.isPresent()) return mapper.map(entidade.get(), ClienteDTO.class);
-        return null;
+        return entidade.map(cliente -> mapper.map(cliente, ClienteDTO.class)).orElse(null);
     }
 
     /**
@@ -64,9 +61,7 @@ public class ClienteDAOImpl {
         List<ClienteDTO> clientes = new ArrayList<>();
         List<Optional<Cliente>> entidades = clienteRepository.findByNome(nome);
         for (Optional<Cliente> entidade : entidades) {
-            if(entidade.isPresent()){
-                clientes.add(mapper.map(entidade.get(), ClienteDTO.class));
-            }
+            entidade.ifPresent(cliente -> clientes.add(mapper.map(cliente, ClienteDTO.class)));
         }
 
         return clientes.isEmpty() ? null : clientes;
@@ -83,9 +78,7 @@ public class ClienteDAOImpl {
         List<ClienteDTO> clientes = new ArrayList<>();
         List<Optional<Cliente>> entidades = clienteRepository.findBySexo(enumSexo.name());
         for (Optional<Cliente> entidade : entidades) {
-            if(entidade.isPresent()){
-                clientes.add(mapper.map(entidade.get(), ClienteDTO.class));
-            }
+            entidade.ifPresent(cliente -> clientes.add(mapper.map(cliente, ClienteDTO.class)));
         }
 
         return clientes.isEmpty() ? null : clientes;
@@ -116,7 +109,7 @@ public class ClienteDAOImpl {
      * @return - O {@link ClienteDTO} que foi atualizado na base ou lança {@link UpdateException} quando o cliente não existir.
      */
     public ClienteDTO updateCliente(ClienteDTO updateCliente) {
-        if(null != this.getById(updateCliente.getId())){
+        if(Objects.nonNull(this.getById(updateCliente.getId()))){
             validarCidade(updateCliente);
 
             calcularIdadeSeNecessario(updateCliente);
@@ -169,7 +162,7 @@ public class ClienteDAOImpl {
      * @param cliente - {@link ClienteDTO} que estiver sendo inserido ou atualizado.
      */
     private void calcularIdadeSeNecessario(ClienteDTO cliente) {
-        if (isNull(cliente.getIdade()) || cliente.getIdade().equals(Integer.valueOf(0))){
+        if (isNull(cliente.getIdade()) || cliente.getIdade().equals(0)){
             cliente.calcularIdade();
         }
     }

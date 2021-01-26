@@ -1,4 +1,4 @@
-package br.com.compassouol.challenge.dao;
+package br.com.compassouol.challenge.dao.repository;
 
 import br.com.compassouol.challenge.dao.entity.Cidade;
 import org.springframework.data.jpa.repository.JpaRepository;

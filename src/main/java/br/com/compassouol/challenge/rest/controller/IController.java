@@ -13,8 +13,7 @@ public interface IController{
      */
     @GetMapping
     static ResponseEntity<ResponseDTO> pingController(){
-        String name = "Serviço está";
-        ResponseDTO response = new ResponseDTO(HttpStatus.OK,name + " online!" );
+        ResponseDTO response = new ResponseDTO(HttpStatus.OK, "Serviço está" + " online!" );
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 }

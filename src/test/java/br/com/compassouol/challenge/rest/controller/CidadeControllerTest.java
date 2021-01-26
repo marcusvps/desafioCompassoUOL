@@ -90,6 +90,13 @@ class CidadeControllerTest {
     }
 
     @Test
+    void test_http_bad_request_ao_buscar_cidades_sem_nenhum_parametro() {
+        HashMap<String, String> params = new HashMap<>();
+        ResponseEntity<List<CidadeDTO>> response = cidadeController.getCidadeByFilter(params);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
     void test_sucesso_ao_incluir_nova_cidade_estado() {
         CidadeDTO newCidade = new CidadeDTO("Brazlândia", "Distrito Federal");
         ResponseEntity<CidadeDTO> cidadeAdicionada = cidadeController.addCidade(newCidade);

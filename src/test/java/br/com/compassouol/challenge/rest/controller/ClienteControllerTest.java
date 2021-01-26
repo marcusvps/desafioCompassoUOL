@@ -84,6 +84,7 @@ class ClienteControllerTest {
                 LocalDate.of(1990,3,2),
                 new CidadeDTO("Rio de Janeiro","Rio de Janeiro"));
 
+        newCliente.setIdade(null);
         ResponseEntity<ClienteDTO> clienteAdiconado = clienteController.addCliente(newCliente);
         Assertions.assertEquals(Integer.valueOf(31), Objects.requireNonNull(clienteAdiconado.getBody()).getIdade());
 
@@ -173,7 +174,7 @@ class ClienteControllerTest {
                 "Taguatinga");
 
         ResponseEntity<ClienteDTO> resposta = clienteController.addCliente(newCliente);
-
+        Assertions.assertEquals("Taguatinga", Objects.requireNonNull(resposta.getBody()).getNomeCidade());
         Assertions.assertEquals("Distrito Federal", Objects.requireNonNull(resposta.getBody()).getCidadeDTO().getEstado());
     }
 
@@ -226,5 +227,12 @@ class ClienteControllerTest {
         params.put("siglaSexo","F");
         ResponseEntity<List<ClienteDTO>> response = clienteController.getClientByFilter(params);
         Assertions.assertNotNull(response.getBody());
+    }
+
+    @Test
+    void test_http_bad_request_ao_buscar_clientes_sem_nenhum_parametro() {
+        HashMap<String, String> params = new HashMap<>();
+        ResponseEntity<List<ClienteDTO>> response = clienteController.getClientByFilter(params);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST,response.getStatusCode());
     }
 }

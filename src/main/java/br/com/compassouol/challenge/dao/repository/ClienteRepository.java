@@ -1,6 +1,5 @@
-package br.com.compassouol.challenge.dao;
+package br.com.compassouol.challenge.dao.repository;
 
-import br.com.compassouol.challenge.dao.entity.Cidade;
 import br.com.compassouol.challenge.dao.entity.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

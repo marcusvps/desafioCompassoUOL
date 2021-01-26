@@ -1,5 +1,6 @@
-package br.com.compassouol.challenge.dao;
+package br.com.compassouol.challenge.dao.impl;
 
+import br.com.compassouol.challenge.dao.repository.CidadeRepository;
 import br.com.compassouol.challenge.dao.entity.Cidade;
 import br.com.compassouol.challenge.dto.CidadeDTO;
 import br.com.compassouol.challenge.exception.InsertException;
@@ -63,7 +64,7 @@ public class CidadeDAOImpl {
      */
     public CidadeDTO addCidade(CidadeDTO newCidade) {
         Cidade entidade = mapper.map(newCidade,Cidade.class);
-        if (null != this.getByName(newCidade.getNome())) {
+        if (Objects.nonNull(this.getByName(newCidade.getNome()))) {
             throw new InsertException("A cidade " + newCidade.getNome() + " já existe.");
         }
 
