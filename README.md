@@ -42,7 +42,7 @@ A atualização ou criação da imagem deve ser realizado com `mvn clean package
 A execução da imagem pode ser realizado com o comando `docker run -p 8080:8080 \compassouol/challenge-app`
 
 # Swagger
-O  Swagger está versionado no arquivo `swagger.yaml`  e pode ser visualizado em https://editor.swagger.io/.
+O  Swagger está versionado no arquivo `swagger.yaml` que está na raiz do projeto.
 
 # Postman
 As requisições de exemplo podem ser importadas no postman, através do arquivo `CompassoUOL.postman_collection.json`
