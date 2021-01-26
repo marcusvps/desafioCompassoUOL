@@ -19,7 +19,7 @@ Tecnologias utilizadas:
 `mvn clean install`
 
 2 - Execute o projeto com springBoot  
-`mvn spring-boot:run` ou execute com o docker `docker run -p 8080:8080 /compassouol/challenge-app`
+`mvn spring-boot:run` ou execute com o docker `docker run -p 8080:8080 \compassouol/challenge-app`
 
 3 - A url padrão da aplicação é http://localhost:8080
 
