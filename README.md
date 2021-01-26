@@ -39,7 +39,7 @@ a criação do banco é utilzado o arquivo `data.sql` que está em `src/main/res
 # Docker
 A atualização ou criação da imagem deve ser realizado com `mvn clean package dockerfile:build`
 
-A execução da imagem pode ser realizado com o comando `docker run -p 8080:8080 \compassouol/challenge-app`
+A execução da imagem pode ser realizada com o comando `docker run -p 8080:8080 \compassouol/challenge-app`
 
 # Swagger
 O  Swagger está versionado no arquivo `swagger.yaml` e pode ser visualizado em https://app.swaggerhub.com/apis/marcusvps/swagger-compasso_uol/1.0.0
